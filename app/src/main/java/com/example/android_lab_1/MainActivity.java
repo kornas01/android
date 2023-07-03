@@ -1,40 +1,59 @@
 package com.example.android_lab_1;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.RelativeLayout;
+import android.widget.EditText;
 import android.widget.TextView;
-
-import androidx.annotation.Nullable;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
 
-    private CheckBox checkBox;
-    private Button button1;
+    private EditText username;
+    private EditText password;
+    private TextView attempts;
+    private TextView numberOfAttempts;
 
+    int numberOfRemainingLoginAttempts = 5;
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        checkBox = findViewById(R.id.checkbox);
-        button1 = findViewById(R.id.button1);
-        //который устанавливает слушатель изменений состояния переключателя
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    button1.setVisibility(View.GONE);
-                } else {
-                    button1.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        username = (EditText) findViewById(R.id.edit_user);
+        password = (EditText) findViewById(R.id.edit_password);
+        attempts = (TextView) findViewById(R.id.attempts);
+        numberOfAttempts = (TextView) findViewById(R.id.number_of_attempts);
+        numberOfAttempts.setText(Integer.toString(numberOfRemainingLoginAttempts));
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void Login(View view) {
+
+        if (username.getText().toString().equals("anastasia") &&
+                password.getText().toString().equals("kornaukhova")) {
+            Toast.makeText(getApplicationContext(), "Вход выполнен!",Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(MainActivity.this,TableActivity.class);
+            startActivity(intent);
+        }
+
+        else {
+            Toast.makeText(getApplicationContext(), "Неправильные данные!",Toast.LENGTH_SHORT).show();
+            numberOfRemainingLoginAttempts--;
+            if(numberOfRemainingLoginAttempts == 0)
+                finish();
+
+            attempts.setVisibility(View.VISIBLE);
+            numberOfAttempts.setVisibility(View.VISIBLE);
+            numberOfAttempts.setText(Integer.toString(numberOfRemainingLoginAttempts));
+
+        }
     }
 }
